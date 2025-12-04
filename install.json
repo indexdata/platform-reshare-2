@@ -1,0 +1,82 @@
+[
+  {
+    "id": "folio_developer-9.0.0",
+    "action": "enable"
+  },
+  {
+    "id": "folio_stripes-core-10.2.9",
+    "action": "enable"
+  },
+  {
+    "id": "folio_stripes-smart-components-9.2.7",
+    "action": "enable"
+  },
+  {
+    "id": "folio_tenant-settings-9.0.0",
+    "action": "enable"
+  },
+  {
+    "id": "folio_users-11.0.14",
+    "action": "enable"
+  },
+  {
+    "id": "mod-authtoken-2.16.2",
+    "action": "enable"
+  },
+  {
+    "id": "mod-configuration-5.11.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-email-1.18.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-any-0.1.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-login-7.11.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-login-saml-2.9.4",
+    "action": "enable"
+  },
+  {
+    "id": "mod-notes-6.0.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-notify-3.3.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-password-validator-3.3.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-permissions-6.6.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-sender-1.13.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-tags-2.3.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-template-engine-1.21.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-users-19.4.6",
+    "action": "enable"
+  },
+  {
+    "id": "mod-users-bl-7.9.4",
+    "action": "enable"
+  }
+]

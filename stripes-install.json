@@ -1,0 +1,22 @@
+[
+  {
+    "id": "folio_developer-9.0.0",
+    "action": "enable"
+  },
+  {
+    "id": "folio_stripes-core-10.2.9",
+    "action": "enable"
+  },
+  {
+    "id": "folio_stripes-smart-components-9.2.7",
+    "action": "enable"
+  },
+  {
+    "id": "folio_tenant-settings-9.0.0",
+    "action": "enable"
+  },
+  {
+    "id": "folio_users-11.0.14",
+    "action": "enable"
+  }
+]
