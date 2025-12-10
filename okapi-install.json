@@ -12,10 +12,6 @@
     "action": "enable"
   },
   {
-    "id": "mod-any-0.1.1",
-    "action": "enable"
-  },
-  {
     "id": "mod-login-7.11.1",
     "action": "enable"
   },
