@@ -20,6 +20,10 @@
     "action": "enable"
   },
   {
+    "id": "mod-any-0.1.1",
+    "action": "enable"
+  },
+  {
     "id": "mod-authtoken-2.16.2",
     "action": "enable"
   },
@@ -32,11 +36,7 @@
     "action": "enable"
   },
   {
-    "id": "mod-any-0.1.1",
-    "action": "enable"
-  },
-  {
-    "id": "mod-login-7.11.1",
+    "id": "mod-login-7.12.1",
     "action": "enable"
   },
   {
@@ -45,10 +45,6 @@
   },
   {
     "id": "mod-notes-6.0.0",
-    "action": "enable"
-  },
-  {
-    "id": "mod-notify-3.3.0",
     "action": "enable"
   },
   {
