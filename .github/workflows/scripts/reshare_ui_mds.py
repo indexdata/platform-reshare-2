@@ -9,16 +9,11 @@ import urllib.request
 import uuid
 
 RESHARE_MODULES = [
-    "reshare_rs",
-    "reshare_directory",
-    "reshare_request",
-    "reshare_supply",
-    "reshare_update"
+    "reshare_rsdir"
 ]
 
 TENANTS = [
-    "reshare_east",
-    "reshare_west",
+    "resharetwo"
 ]
 
 # main logic for this script goes here, functions used are defined below
@@ -92,7 +87,7 @@ def parse_command_line_args():
     parser.add_argument('-u', '--username', help='okapi super user username', required=True)
     parser.add_argument('-p', '--password', help='okapi super user password', required=True)
     parser.add_argument('-o', '--okapi-url', help='okapi url',
-                        default='https://okapi-reshare-1.folio-dev-us-east-1-1.folio-dev.indexdata.com', required=False)
+                        default='https://reshare-2-okapi.folio-dev-us-east-1-1.folio-dev.indexdata.com', required=False)
 
     args = parser.parse_args()
 

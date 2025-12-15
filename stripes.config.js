@@ -1,5 +1,5 @@
 module.exports = {
-  okapi: { 'url':'reshare-2-okapi.folio-dev-us-east-1-1.folio-dev.indexdata.com', 'tenant':'reshare_2' },
+  okapi: { 'url':'https://reshare-2-okapi.folio-dev-us-east-1-1.folio-dev.indexdata.com', 'tenant':'reshare_2' },
   config: {
     showHomeLink: true,
     welcomeMessage: 'ui-rs.front.welcome',
