@@ -13,6 +13,7 @@ module.exports = {
     '@folio/users': {},
     '@folio/developer': {},
     "@folio/tenant-settings": {},
+    "@projectreshare/rsdir": {},
   },
   branding: {
     style: {},
