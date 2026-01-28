@@ -68,10 +68,6 @@
     "action": "enable"
   },
   {
-    "id": "mod-reading-room-1.0.0",
-    "action": "enable"
-  },
-  {
     "id": "mod-batch-print-1.2.0",
     "action": "enable"
   },
@@ -112,10 +108,6 @@
     "action": "enable"
   },
   {
-    "id": "mod-oai-pmh-3.14.4",
-    "action": "enable"
-  },
-  {
     "id": "mod-organizations-2.0.0",
     "action": "enable"
   },
@@ -133,10 +125,6 @@
   },
   {
     "id": "mod-courses-1.4.11",
-    "action": "enable"
-  },
-  {
-    "id": "mod-data-import-3.2.5",
     "action": "enable"
   },
   {
@@ -176,10 +164,6 @@
     "action": "enable"
   },
   {
-    "id": "mod-entities-links-3.1.5",
-    "action": "enable"
-  },
-  {
     "id": "mod-inventory-21.0.17",
     "action": "enable"
   },
@@ -196,10 +180,6 @@
     "action": "enable"
   },
   {
-    "id": "mod-remote-storage-3.3.5",
-    "action": "enable"
-  },
-  {
     "id": "mod-orders-12.9.13",
     "action": "enable"
   },
@@ -213,18 +193,6 @@
   },
   {
     "id": "mod-search-4.0.14",
-    "action": "enable"
-  },
-  {
-    "id": "mod-data-export-5.1.7",
-    "action": "enable"
-  },
-  {
-    "id": "mod-data-export-worker-3.3.10",
-    "action": "enable"
-  },
-  {
-    "id": "mod-data-export-spring-3.4.4",
     "action": "enable"
   },
   {
