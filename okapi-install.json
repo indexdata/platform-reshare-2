@@ -1,62 +1,10 @@
 [
   {
-    "id": "mod-permissions-6.6.1",
-    "action": "enable"
-  },
-  {
-    "id": "mod-users-19.4.6",
+    "id": "mod-audit-2.10.2",
     "action": "enable"
   },
   {
     "id": "mod-authtoken-2.16.2",
-    "action": "enable"
-  },
-  {
-    "id": "mod-di-converter-storage-2.3.2",
-    "action": "enable"
-  },
-  {
-    "id": "mod-entities-links-3.1.5",
-    "action": "enable"
-  },
-  {
-    "id": "mod-graphql-1.13.1",
-    "action": "enable"
-  },
-  {
-    "id": "mod-event-config-2.8.0",
-    "action": "enable"
-  },
-  {
-    "id": "mod-source-record-storage-5.9.17",
-    "action": "enable"
-  },
-  {
-    "id": "mod-tags-2.3.0",
-    "action": "enable"
-  },
-  {
-    "id": "mod-login-7.12.1",
-    "action": "enable"
-  },
-  {
-    "id": "mod-pubsub-2.15.7",
-    "action": "enable"
-  },
-  {
-    "id": "mod-password-validator-3.3.0",
-    "action": "enable"
-  },
-  {
-    "id": "mod-service-interaction-4.1.4",
-    "action": "enable"
-  },
-  {
-    "id": "mod-inventory-storage-28.0.14",
-    "action": "enable"
-  },
-  {
-    "id": "mod-inventory-update-4.0.0",
     "action": "enable"
   },
   {
@@ -68,39 +16,7 @@
     "action": "enable"
   },
   {
-    "id": "mod-configuration-5.11.0",
-    "action": "enable"
-  },
-  {
-    "id": "mod-email-1.18.1",
-    "action": "enable"
-  },
-  {
-    "id": "mod-users-bl-7.9.4",
-    "action": "enable"
-  },
-  {
-    "id": "mod-sender-1.13.0",
-    "action": "enable"
-  },
-  {
-    "id": "mod-notes-6.0.0",
-    "action": "enable"
-  },
-  {
-    "id": "mod-login-saml-2.9.4",
-    "action": "enable"
-  },
-  {
-    "id": "mod-source-record-manager-3.9.10",
-    "action": "enable"
-  },
-  {
-    "id": "mod-courses-1.4.11",
-    "action": "enable"
-  },
-  {
-    "id": "mod-settings-1.1.0",
+    "id": "mod-circulation-24.3.22",
     "action": "enable"
   },
   {
@@ -108,15 +24,31 @@
     "action": "enable"
   },
   {
-    "id": "mod-patron-blocks-1.11.3",
+    "id": "mod-configuration-5.11.0",
     "action": "enable"
   },
   {
-    "id": "mod-template-engine-1.21.0",
+    "id": "mod-courses-1.4.11",
     "action": "enable"
   },
   {
-    "id": "mod-notify-3.3.0",
+    "id": "mod-data-export-5.1.7",
+    "action": "enable"
+  },
+  {
+    "id": "mod-di-converter-storage-2.3.2",
+    "action": "enable"
+  },
+  {
+    "id": "mod-email-1.18.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-entities-links-3.1.5",
+    "action": "enable"
+  },
+  {
+    "id": "mod-event-config-2.8.0",
     "action": "enable"
   },
   {
@@ -124,11 +56,7 @@
     "action": "enable"
   },
   {
-    "id": "mod-user-import-3.9.0",
-    "action": "enable"
-  },
-  {
-    "id": "mod-circulation-24.3.22",
+    "id": "mod-graphql-1.13.1",
     "action": "enable"
   },
   {
@@ -136,7 +64,19 @@
     "action": "enable"
   },
   {
-    "id": "mod-patron-6.2.12",
+    "id": "mod-inventory-storage-28.0.14",
+    "action": "enable"
+  },
+  {
+    "id": "mod-inventory-update-4.0.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-login-7.12.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-login-saml-2.9.4",
     "action": "enable"
   },
   {
@@ -144,11 +84,79 @@
     "action": "enable"
   },
   {
-    "id": "mod-audit-2.10.2",
+    "id": "mod-notes-6.0.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-notify-3.3.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-organizations-storage-4.8.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-password-validator-3.3.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-patron-6.2.12",
+    "action": "enable"
+  },
+  {
+    "id": "mod-patron-blocks-1.11.3",
+    "action": "enable"
+  },
+  {
+    "id": "mod-permissions-6.6.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-pubsub-2.15.7",
     "action": "enable"
   },
   {
     "id": "mod-search-4.0.14",
+    "action": "enable"
+  },
+  {
+    "id": "mod-sender-1.13.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-service-interaction-4.1.4",
+    "action": "enable"
+  },
+  {
+    "id": "mod-settings-1.1.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-source-record-manager-3.9.10",
+    "action": "enable"
+  },
+  {
+    "id": "mod-source-record-storage-5.9.17",
+    "action": "enable"
+  },
+  {
+    "id": "mod-tags-2.3.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-template-engine-1.21.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-user-import-3.9.0",
+    "action": "enable"
+  },
+  {
+    "id": "mod-users-19.4.6",
+    "action": "enable"
+  },
+  {
+    "id": "mod-users-bl-7.9.4",
     "action": "enable"
   }
 ]
