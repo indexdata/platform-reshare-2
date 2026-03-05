@@ -9,6 +9,9 @@
   },
   "scripts": {
     "build": "export STRIPES_TRANSPILE_TOKENS=\"@k-int @projectreshare\"; export NODE_OPTIONS=\"--max-old-space-size=4096 $NODE_OPTIONS\"; stripes build stripes.config.js",
+    "deploy": "sh -c 'find $0 -type f -exec gzip \"{}\" \\; -exec mv \"{}.gz\" \"{}\" \\; ; aws --profile indexdata-dev s3 sync ${0}/ s3://reshare-bundles/${0} --acl public-read --content-encoding gzip --delete'",
+    "upload": "sh -c 'aws --profile indexdata-dev s3 sync ${0}/ s3://reshare-bundles/${0} --acl public-read --content-encoding gzip --delete'",
+    "update-translations": "sh -c 'sed -i.bak 's/FOLIO/ReShare/g' ${0}/translations/en* && rm -f ${0}/translations/en*.bak'",
     "stripes": "./node_modules/.bin/stripes",
     "start": "stripes serve stripes.config.js",
     "cypress": "cypress",
@@ -82,6 +85,9 @@
     "@folio/tenant-settings": "9.0.0",
     "@folio/users": "11.0.14",
     "@projectreshare/rsdir": "git+ssh://git@github.com/indexdata/ui-rsdir.git#main",
+    "@projectreshare/rs": "git+ssh://git@github.com/indexdata/ui-rs.git#main",
+    "@projectreshare/request": "https://github.com/openlibraryenvironment/ui-request#master",
+    "@projectreshare/supply": "https://github.com/openlibraryenvironment/ui-supply#master",
     "final-form": "^4.20.7",
     "final-form-arrays": "^3.0.2",
     "moment": "~2.29.0",
@@ -109,15 +115,19 @@
   "resolutions": {
     "@jridgewell/gen-mapping": "0.3.7",
     "@types/react": "^18",
+    "@apollo/client": "3.8.6",
     "@folio/stripes-acq-components": "6.0.5",
     "@folio/stripes-template-editor": "3.4.2",
     "typescript": "~5.5",
-    "@rehooks/local-storage": "2.4.5",
     "colors": "1.4.0",
     "final-form": "^4.20.4",
     "minimist": "^1.2.3",
     "moment": "~2.29.0",
     "react-cookie": "^7.2.2",
-    "redux-form": "^8.0.0"
+    "redux-form": "^8.0.0",
+    "@folio/plugin-create-inventory-records": "5.0.1",
+    "@folio/plugin-query-builder" : "1.2.10",
+    "@projectreshare/stripes-reshare": "2.1.0",
+    "@rehooks/local-storage": "2.4.5"
   }
 }
