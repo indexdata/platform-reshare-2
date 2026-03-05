@@ -13,7 +13,9 @@ RESHARE_MODULES = [
 ]
 
 TENANTS = [
-    "resharetwo"
+    "rs1",
+    "rs2",
+    "rs3"
 ]
 
 # main logic for this script goes here, functions used are defined below
