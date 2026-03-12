@@ -47,10 +47,19 @@ jobs:
           name: yarn.lock
           path: yarn.lock
 
-      - name: run build scripts
+      - name: build module descriptors
         run: |
-          ./node_modules/.bin/stripes mod descriptor stripes.config.js --output ./ModuleDescriptors &&
-          STRIPES_TRANSPILE_TOKENS=@k-int yarn build output 
+          ./node_modules/.bin/stripes mod descriptor stripes.config.js --output ./ModuleDescriptors 
+
+      - name: build webpacks
+        run: |
+          set -euo pipefail
+          rm -rf rs1 rs2 rs3
+          for tenant in rs1 rs2 rs3; do
+            yarn build --tenant "$tenant" --okapi "https://${tenant}-okapi.reshare-dev.indexdata.com"
+            rm -rf "./${tenant}"
+            mv output "./${tenant}"
+          done
 
       - name: Post new module descriptors
         run: |
@@ -60,8 +69,9 @@ jobs:
 
       - name: upload builds
         run: |
-          ls &&
-          aws s3 sync ./output s3://reshare-bundles/resharetwo --acl public-read --delete
+          aws s3 sync ./rs1 s3://reshare-bundles/rs1 --acl public-read --delete
+          aws s3 sync ./rs2 s3://reshare-bundles/rs2 --acl public-read --delete
+          aws s3 sync ./rs3 s3://reshare-bundles/rs3 --acl public-read --delete
 
       #- name: Invalidate CF resharetwo
       #  run: |
