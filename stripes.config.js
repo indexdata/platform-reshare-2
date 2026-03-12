@@ -23,6 +23,7 @@ module.exports = {
     "@folio/plugin-find-instance": {},
     "@folio/plugin-find-interface": {},
     "@folio/plugin-find-user": {},
+    "@folio/requests": {},
     "@folio/servicepoints": {},
     "@folio/stripes-inventory-components": {},
     "@folio/tags": {},

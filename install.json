@@ -80,6 +80,10 @@
     "action": "enable"
   },
   {
+    "id": "folio_requests-11.0.9",
+    "action": "enable"
+  },
+  {
     "id": "folio_users-11.0.14",
     "action": "enable"
   },

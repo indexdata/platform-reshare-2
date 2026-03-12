@@ -120,6 +120,7 @@
     "@folio/stripes-template-editor": "3.4.2",
     "typescript": "~5.5",
     "colors": "1.4.0",
+    "downshift": "9.0.13",
     "final-form": "^4.20.4",
     "minimist": "^1.2.3",
     "moment": "~2.29.0",
