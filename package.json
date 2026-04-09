@@ -128,7 +128,7 @@
     "redux-form": "^8.0.0",
     "@folio/plugin-create-inventory-records": "5.0.1",
     "@folio/plugin-query-builder" : "1.2.10",
-    "@projectreshare/stripes-reshare": "2.1.0",
+    "@projectreshare/rs": "git+ssh://git@github.com/indexdata/ui-rs.git#main",
     "@rehooks/local-storage": "2.4.5"
   }
 }
