@@ -89,7 +89,7 @@ def parse_command_line_args():
     parser.add_argument('-u', '--username', help='okapi super user username', required=True)
     parser.add_argument('-p', '--password', help='okapi super user password', required=True)
     parser.add_argument('-o', '--okapi-url', help='okapi url',
-                        default='https://reshare-2-okapi.folio-dev-us-east-1-1.folio-dev.indexdata.com', required=False)
+                        default='https://resharex-okapi.folio-dev-us-east-1-1.folio-dev.indexdata.com', required=False)
 
     args = parser.parse_args()
 
