@@ -118,6 +118,7 @@
     "@apollo/client": "3.8.6",
     "@folio/stripes-acq-components": "6.0.5",
     "@folio/stripes-template-editor": "3.4.2",
+    "@projectreshare/stripes-reshare": "https://github.com/indexdata/stripes-reshare.git#master",
     "typescript": "~5.5",
     "colors": "1.4.0",
     "downshift": "9.0.13",
