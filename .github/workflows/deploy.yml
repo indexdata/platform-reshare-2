@@ -70,7 +70,7 @@ jobs:
             mv output "./${tenant}"
           done
 
-      - name: build webpacks
+      - name: build consortial webpack
         run: |
           set -euo pipefail
           rm -rf consortial
