@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "export STRIPES_TRANSPILE_TOKENS=\"@k-int @projectreshare\"; export NODE_OPTIONS=\"--max-old-space-size=4096 $NODE_OPTIONS\"; stripes build stripes.config.js",
+    "buildconsortial": "export STRIPES_TRANSPILE_TOKENS=\"@k-int @projectreshare\"; export NODE_OPTIONS=\"--max-old-space-size=4096 $NODE_OPTIONS\"; stripes build consortial.stripes.config.js",
     "deploy": "sh -c 'find $0 -type f -exec gzip \"{}\" \\; -exec mv \"{}.gz\" \"{}\" \\; ; aws --profile indexdata-dev s3 sync ${0}/ s3://reshare-bundles/${0} --acl public-read --content-encoding gzip --delete'",
     "upload": "sh -c 'aws --profile indexdata-dev s3 sync ${0}/ s3://reshare-bundles/${0} --acl public-read --content-encoding gzip --delete'",
     "update-translations": "sh -c 'sed -i.bak 's/FOLIO/ReShare/g' ${0}/translations/en* && rm -f ${0}/translations/en*.bak'",

@@ -70,6 +70,16 @@ jobs:
             mv output "./${tenant}"
           done
 
+      - name: build webpacks
+        run: |
+          set -euo pipefail
+          rm consortial
+          for tenant in consortial
+            yarn buildconsortial
+            rm -rf "./${tenant}"
+            mv output "./${tenant}"
+          done
+
       - name: Post new module descriptors
         run: |
           /usr/bin/python3 .github/workflows/scripts/reshare_ui_mds.py \
@@ -81,6 +91,7 @@ jobs:
           aws s3 sync ./rs1 s3://reshare-bundles/rs1 --acl public-read --delete
           aws s3 sync ./rs2 s3://reshare-bundles/rs2 --acl public-read --delete
           aws s3 sync ./rs3 s3://reshare-bundles/rs3 --acl public-read --delete
+          aws s3 sync ./rs3 s3://reshare-bundles/consortial --acl public-read --delete
 
       #- name: Invalidate CF resharetwo
       #  run: |
