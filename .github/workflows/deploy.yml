@@ -73,8 +73,8 @@ jobs:
       - name: build webpacks
         run: |
           set -euo pipefail
-          rm consortial
-          for tenant in consortial
+          rm -rf consortial
+          for tenant in consortial; do
             yarn buildconsortial
             rm -rf "./${tenant}"
             mv output "./${tenant}"
