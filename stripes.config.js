@@ -1,8 +1,8 @@
 module.exports = {
-  okapi: { 'url':'https://reshare-2-okapi.folio-dev-us-east-1-1.folio-dev.indexdata.com', 'tenant':'resharetwo' },
+  okapi: { 'url':'https://resharex-okapi.folio-dev-us-east-1-1.folio-dev.indexdata.com', 'tenant':'resharetwo' },
   config: {
     showHomeLink: true,
-    welcomeMessage: 'ui-rs.front.welcome',
+    welcomeMessage: 'ReShare X Platform',
     platformName: 'ReShare',
     platformDescription: 'ReShare platform',
     hasAllPerms: false,
