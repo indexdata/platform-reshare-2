@@ -47,10 +47,10 @@ $ kubectl -n reshare get pods
 NAME                     READY   STATUS    RESTARTS      AGE
 resharedb-postgresql-0   1/1     Running   0             38m
 ```
-Check logs that the secret was created, and tail the postgres logs.
+Check that the secret was created, and tail the postgres logs.
 
 ### Okapi
-[Okapi](https://github.com/folio-org/okap) is the API gateway and proxy server that provides a unified entrypoint to most ReShare components. Okapi can be deployed from a chart. Copy the [okapi.yaml](./manifests/reshare/charts/okapi.yaml) chart into the "charts" repository. Take a look at the configured values. Note the database credentials. Commit the Okapi chart, and verify the statefulset comes up. At this point, create an environment variable with your okapi hostname:
+[Okapi](https://github.com/folio-org/okapi) is the API gateway and proxy server that provides a unified entrypoint to most ReShare components. Okapi can be deployed from a chart. Copy the [okapi.yaml](./manifests/reshare/charts/okapi.yaml) chart into the "charts" repository. Take a look at the configured values. Note the database credentials. *Commit the Okapi chart*, and verify the statefulset comes up. At this point, create an environment variable with your okapi hostname:
 
 ```
 export okapi=https://myokapi.mydomain.tld
@@ -72,8 +72,8 @@ For
 
 Begin by deploying the required software in the reshare namespace. Copy the "auth-modules" directory into the root of the flux control repository. Inspect the manifests there. For each module, there are two manifests, a deployment and a service. The deployment creates a pod, and the service creates a route to that pod. In the deployment manifest, note that the modules get their database credentials from the shared database secret created by the db-secrets.yaml manifest at the root of the reshare namespace.
 
-### Checkpoint: commit and deploy
-A this piont, the flux control repository should include these files:
+### Checkpoint: Okapi and login software
+A this point, the flux control repository should include these files:
 ```
 .
 ├── helm-repos
@@ -155,3 +155,15 @@ There are no users on the reservoir tenant. Additionally, mod-authtoken is enabl
 ```
 python3 scripts/create-tenant-admin.py -o $mokapi -u okapi_admin -a reservoir_admin -t reservoir
 ```
+
+## Appendix
+
+### Run a debug pod
+You can run a pod in your cluster to get a shell for debugging. For example:
+```
+kubectl -n reshare-dev run --rm -it --restart=Never debug --image=alpine:latest sh
+```
+This will start a temporary alpine linux image. You can add software by running `apk update` and then `apk add httpie` for example to add a specific package. From here you can reach okapi: `http http://okapi:9130`.
+
+### HTTPpie
+This document uses HTTPie as the command line http client for examples. Curl or another option could be used as well. More information about HTTPie is here: https://httpie.io/cli.

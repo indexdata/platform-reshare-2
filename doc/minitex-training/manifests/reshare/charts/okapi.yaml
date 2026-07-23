@@ -1,8 +1,8 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: okapi
-  namespace: minitex-training
+  namespace: reshare
 spec:
   releaseName: okapi
   interval: 10m
@@ -25,18 +25,20 @@ spec:
       requests:
         memory: 4096Mi
     secret: {"storage": "postgres","postgres_host": "resharedb-postgresql","postgres_port": "5432","postgres_username": "okapi","postgres_password": "okapi123","postgres_database": "okapi","okapiurl": "http://okapi:9130"}
-    ingress:
-      className: traefik
-      annotations:
-        external-dns.alpha.kubernetes.io/target: "k8s-kubesyst-foliodev-dc9b5cc5d0-1660806498.us-east-1.elb.amazonaws.com"
-        nginx.ingress.kubernetes.io/proxy-body-size: "10000m"
-        nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
-        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
-      hosts:
-        - host: minitex-training-okapi.reshare-dev.indexdata.com
-          paths:
-            - path: /
-              pathType: Prefix
+    # this section creates an ingress, uncomment 
+    #ingress:
+    #  className: traefik
+    #  annotations:
+    #    external-dns.alpha.kubernetes.io/target: "some-alb-identifier-from-aws.us-east-1.elb.amazonaws.com"
+    #    nginx.ingress.kubernetes.io/proxy-body-size: "10000m"
+    #    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    #    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    #  hosts:
+    #    # hostname on a domain route53 has access to
+    #    - host: hostname.myorg.tld
+    #      paths:
+    #        - path: /
+    #          pathType: Prefix
     probes:
       liveness:
         enabled: false
