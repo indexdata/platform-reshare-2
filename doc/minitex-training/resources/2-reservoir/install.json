@@ -1,0 +1,22 @@
+[
+  {
+    "id": "mod-authtoken-2.16.2",
+    "action": "enable"
+  },
+  {
+    "id": "mod-login-7.12.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-permissions-6.6.1",
+    "action": "enable"
+  },
+  {
+    "id": "mod-reservoir-0.1.0-master.243+sha.b6319e9",
+    "action": "enable"
+  },
+  {
+    "id": "mod-users-19.6.0",
+    "action": "enable"
+  }
+]
