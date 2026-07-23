@@ -10,7 +10,7 @@ The kubernetes namespace provides logical sepeartion from other areas in the Kub
 
 
 ### Chart Repositories
-We'll take advantage of a number of Helm charts to deploy software. Configure a help repository for the necessary charts. In this example, repositories are in the "flux-system" namespace. We put them in the "helm-repos" directory in the flux control repository for convenience. Create the helm-repos directory and add the following manifests:
+We'll take advantage of a number of Helm charts to deploy software. Configure a helm repository for the included charts. In this example, repositories are in the "flux-system" namespace. We put them in the "helm-repos" directory in the flux control repository for convenience. Create the helm-repos directory and add the following manifests:
 * [bitnami helm repository](./manifests/helm-repos/bitnami-charts.yaml)
 * [indexdata public helm repository](./manifests/helm-repos/idgithub-public.yaml)
 
