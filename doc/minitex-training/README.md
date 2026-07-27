@@ -155,8 +155,6 @@ There are no users on the reservoir tenant. Additionally, mod-authtoken is enabl
 ```
 python3 scripts/create-tenant-admin.py -o $mokapi -u okapi_admin -a reservoir_admin -t reservoir
 ```
-
- -------------------------- WIP ----------------------------
 ## ReShare Tenants
 The ReShare tenants used by ILL staff to manage loans are comprised of the ReShare softwware plus a base set of FOLIO modules to provide authn/z, user namangement, and mail. 
 
@@ -259,10 +257,18 @@ for f in project*; do cat $f | http POST $okapi/_/proxy/modules "x-okapi-token:$
 ```
 
 ### UI Nginx container
+Copy the manifests/reshare/nginx directory into the root of your flux control repository. This is a simple deployment and service for a stripes container. Note: you will need to create an ingress to reach this from outside your Kubernetes cluster. As an alternative, serve the webpack from your local machine:
+```
+cd resources/3-reshare/output
+python3 -m http.server
+```
 
 ### Create admin for ReShare Tenant
-
- -------------------------- WIP ----------------------------
+Create an for the new tenant using the create-tenant-admin.py script:
+```
+python3 scripts/create-tenant-admin.py -o $okapi -u okapi_admin -a rs1admin -t rs1
+```
+After the administrator has been configured, log in and make sure things look OK in your new tenant.
 
 ## Appendix
 
