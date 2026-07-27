@@ -156,6 +156,114 @@ There are no users on the reservoir tenant. Additionally, mod-authtoken is enabl
 python3 scripts/create-tenant-admin.py -o $mokapi -u okapi_admin -a reservoir_admin -t reservoir
 ```
 
+ -------------------------- WIP ----------------------------
+## ReShare Tenants
+The ReShare tenants used by ILL staff to manage loans are comprised of the ReShare softwware plus a base set of FOLIO modules to provide authn/z, user namangement, and mail. 
+
+Begin by cloning the [reshare-ui](https://github.com/indexdata/reshare-ui) into the "repos" directory:
+```
+git clone https://github.com/indexdata/reshare-ui.git repos/reshare-ui
+```
+We will be using this repository to build the front end webpack, and enable the remaining base modules on the ReShare tenant.
+
+Begin by creating a new tenant for reshare. In this example, the tenant id is "rs1"
+
+```
+cat resources/3-reshare/tenant.json | http POST $okapi/_/proxy/tenants
+```
+
+### FOLIO module deployment
+The remaining FOLIO modules are in the `./manifests/reshare/modules` directory. Copy them into your flux control repository. 
+
+Add the deployment descriptors form the `./resources/3-reshare/deployment-descriptors` directory:
+
+```
+python3 scripts/post-deployent-descriptors.py -o $okapi -u okapi_admin -p okapiadmin123 -d resources/3-reshare/deployment-descriptors/
+```
+
+#### ReShare Chart Manifests
+We will enable the directory, and broker modules on the ReShare tenants. This software is deployed using charts. These charts have the capability to include the okapi hooks chart as a dependency. Okapi hooks automates the Okapi communication for these modules. To use okapi hooks, we need to first create a secret with the okapi credentials. Copy the "okapi-secrets.yaml" secret from `./manifests/reshare/okapi-secrets.yaml` into the root of your flux control repository.
+
+We will deploy the optional crosslink-illmock chart to mock all integration we may want to test. It requires a directory configureation. Copy the `./manifests/reshare/directory-configmap.yaml` manifest into the root of your flux control repository.
+
+Finally, copy the broker.yaml, directory.yaml, and mock.yaml charts from `./manifests/reshare/charts` into the charts directory of your flux control repository.
+
+### Checkpoint: Deploy
+At this point, your flux control repository should include the following manifests:
+```
+.
+├── auth-modules
+│   ├── mod-authtoken-2.16.2
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── mod-login-7.12.1
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── mod-permissions-6.6.1
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   └── mod-users-19.6.0
+│       ├── deployment.yaml
+│       └── service.yaml
+├── charts
+│   ├── broker.yaml
+│   ├── directory.yaml
+│   ├── mock.yaml
+│   ├── okapi.yaml
+│   ├── postgres.yaml
+│   └── reservoir.yaml
+├── db-secrets.yaml
+├── directory-configmap.yaml
+├── reshare-namespace.yaml
+├── modules
+│   ├── mod-configuration-5.11.0
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── mod-notes-6.0.0
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── mod-password-validator-3.3.0
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── mod-settings-1.1.0
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── mod-tags-2.3.0
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   └── mod-users-bl-7.9.4
+│       ├── deployment.yaml
+│       └── service.yaml
+└── okapi-secret.yaml
+```
+
+Commit them and let flux pick up the changes. You should be able to see that the Okapi Hooks job completed and enabled the reshare software on your tenant. Check the enabled software on the new rs1 tenant:
+
+```
+http $okapi/_/proxy/tenants/rs1/modules
+```
+
+### UI Build
+To build the UI, change into the `repos/reshare-ui` directory, and run:
+```
+yarn install
+```
+
+Since UI modules also have module descritors, we need to post the descriptors for the UI mods to Okapi. From the reshare-ui repo, run:
+```
+yarn build-module-descritprs
+```
+This will build a module descriptor for each UI module in the ModuleDescriptors directory. Change into the ModuleDescritpors directory and post them to Okapi:
+```
+for f in project*; do cat $f | http POST $okapi/_/proxy/modules "x-okapi-token:$token"; done
+```
+
+### UI Nginx container
+
+### Create admin for ReShare Tenant
+
+ -------------------------- WIP ----------------------------
+
 ## Appendix
 
 ### Run a debug pod
