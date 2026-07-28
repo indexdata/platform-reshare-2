@@ -1,12 +1,12 @@
 # Minitex training session
 This document provides the examples used in the training sessions. The goals in these sessions are to set up a ReShare system and understand the key concepts of the underlying platform. This document shows an example install, but is not necessarily meant to be a guide for best practice installation in a production environment. 
 
-The order of operations here is geared towards wading into reshare administration more than an efficient setup procedure. The end result should be a ReShare system runnin gin a Kubernetes namespace. This includes the ReShare components such as the crosslink broker, reservoir, and directory module. It also includes the user login subsystem from FOLIO, and any infrastructure necessary to support these systems.
+The order of operations here is geared towards wading into reshare administration more than an efficient setup procedure. The end result should be a ReShare system running in a Kubernetes namespace. This includes the ReShare components such as the crosslink broker, reservoir, and directory module. It also includes the user login subsystem from FOLIO, and any infrastructure necessary to support these systems.
 
 ## Prerequisites
 
 ### Kubernetes namespace
-The kubernetes namespace provides logical sepeartion from other areas in the Kubernetes cluster. Create a new [kubernetes namespace](https://kubernetes.io/docs/reference/kubernetes-api/core/namespace-v1/) for the session. We'll call the namespace "reshare" in this example. From the cluster flux repository create a directory and copy the [namespace manifest](./manifests/reshare/reshare-namespace.yaml) into the new namespace directory.
+The kubernetes namespace provides logical separation from other areas in the Kubernetes cluster. Create a new [kubernetes namespace](https://kubernetes.io/docs/reference/kubernetes-api/core/namespace-v1/) for the session. We'll call the namespace "reshare" in this example. From the cluster flux repository create a directory and copy the [namespace manifest](./manifests/reshare/reshare-namespace.yaml) into the new namespace directory.
 
 
 ### Chart Repositories
@@ -17,9 +17,9 @@ We'll take advantage of a number of Helm charts to deploy software. Configure a 
 
 
 ### Data Storage: Postgresql
-The ReShare project uses the postgres database for data persistence. We will provision an number of databases and roles. To begin, we need a datbase for our module data. This database will support N number of ReShare tenants. We also will need a database for [Okapi](https://github.com/folio-org/okapi). Okapi is a proxy and api gateway server which will provide an entrypoint to the software in the ReShare system. 
+The ReShare project uses the postgres database for data persistence. We will provision an number of databases and roles. To begin, we need a database for our module data. This database will support N number of ReShare tenants. We also will need a database for [Okapi](https://github.com/folio-org/okapi). Okapi is a proxy and api gateway server which will provide an entrypoint to the software in the ReShare system. 
 
-In this guide, postgres is deployed as a helm chart backed by persistent volumes. The Chart is minimally configred with values to create a module and okapi database. Create a "charts" directory and put the [postgres](./manifests/reshare/charts/postgres.yaml) chart in there. Inspect the chart's values and take note of the database creation script. Credentials are included there for demonstration purposes.
+In this guide, postgres is deployed as a helm chart backed by persistent volumes. The Chart is minimally configured with values to create a module and okapi database. Create a "charts" directory and put the [postgres](./manifests/reshare/charts/postgres.yaml) chart in there. Inspect the chart's values and take note of the database creation script. Credentials are included there for demonstration purposes.
 
 Various components of the ReShare system will need postgres credentials. Store them in a secret at the root of the namespace. Copy the [db-secrets.yaml](./manifests/reshare/db-secrets.yaml) into the root of the "reshare" namespace directory. Inspect the manifest and note the credentials.
 
@@ -66,7 +66,7 @@ echo '{"urls" : [ "https://folio-registry.dev.folio.org" ]}' | http POST $okapi/
 The Okapi supertenant is the default tenant. Enable the authentication subsystem on the supertenant to secure the okapi APIs. The process of securing the supertnant follows these steps:
 1. Deploy users, login, permissions, and authentication modules.
 1. Enable all modules on the supertenant except for the authentication module.
-1. Create a user, permissions, and credential record (at this piont, the APIs are still unsecured).
+1. Create a user, permissions, and credential record (at this point, the APIs are still unsecured).
 1. Enable the authentication module to enforce the use of an authentication token.
 For
 
@@ -109,7 +109,7 @@ These are the internal addresses for the modules that were just deployed. The wi
 ### Secure Okapi, continued
 All software for securing Okapi is running on kubernetes. Module descriptors were pulled from the FOLIO registry. To make Okapi aware of the instances of these modules running on kubernetes, post a deployment descriptor for each module. Use the post-deployment-descriptors.py script to create the descriptors:
 ```
-python3 scripts/post-deployent-descriptors.py -o $okapi -d resources/1-supertenant/deployment-descriptors/
+python3 scripts/post-deployment-descriptors.py -o $okapi -d resources/1-supertenant/deployment-descriptors/
 ```
 
 Finally, use the secure-supertenant.py script to bootstrap a superuser:
@@ -153,10 +153,10 @@ cat resources/2-reservoir/install.json | http POST $okapi/_/proxy/tenants/reserv
 ### Create a superuser for the reservoir tenant
 There are no users on the reservoir tenant. Additionally, mod-authtoken is enabled so it is completely locked off. We can bootstrap a superuser using a script to disable mod-authtoken then create a user, permissions user, and login credential before re-enabling mod-authtoken. Run the bootstrap-tenant-admin.py script.
 ```
-python3 scripts/create-tenant-admin.py -o $mokapi -u okapi_admin -a reservoir_admin -t reservoir
+python3 scripts/create-tenant-admin.py -o $okapi -u okapi_admin -a reservoir_admin -t reservoir
 ```
 ## ReShare Tenants
-The ReShare tenants used by ILL staff to manage loans are comprised of the ReShare softwware plus a base set of FOLIO modules to provide authn/z, user namangement, and mail. 
+The ReShare tenants used by ILL staff to manage loans are comprised of the ReShare software plus a base set of FOLIO modules to provide authn/z, user management, and mail. 
 
 Begin by cloning the [reshare-ui](https://github.com/indexdata/reshare-ui) into the "repos" directory:
 ```
@@ -176,13 +176,13 @@ The remaining FOLIO modules are in the `./manifests/reshare/modules` directory. 
 Add the deployment descriptors form the `./resources/3-reshare/deployment-descriptors` directory:
 
 ```
-python3 scripts/post-deployent-descriptors.py -o $okapi -u okapi_admin -p okapiadmin123 -d resources/3-reshare/deployment-descriptors/
+python3 scripts/post-deployment-descriptors.py -o $okapi -u okapi_admin -p okapiadmin123 -d resources/3-reshare/deployment-descriptors/
 ```
 
 #### ReShare Chart Manifests
 We will enable the directory, and broker modules on the ReShare tenants. This software is deployed using charts. These charts have the capability to include the okapi hooks chart as a dependency. Okapi hooks automates the Okapi communication for these modules. To use okapi hooks, we need to first create a secret with the okapi credentials. Copy the "okapi-secrets.yaml" secret from `./manifests/reshare/okapi-secrets.yaml` into the root of your flux control repository.
 
-We will deploy the optional crosslink-illmock chart to mock all integration we may want to test. It requires a directory configureation. Copy the `./manifests/reshare/directory-configmap.yaml` manifest into the root of your flux control repository.
+We will deploy the optional crosslink-illmock chart to mock all integration we may want to test. It requires a directory configuration. Copy the `./manifests/reshare/directory-configmap.yaml` manifest into the root of your flux control repository.
 
 Finally, copy the broker.yaml, directory.yaml, and mock.yaml charts from `./manifests/reshare/charts` into the charts directory of your flux control repository.
 
@@ -247,30 +247,70 @@ To build the UI, change into the `repos/reshare-ui` directory, and run:
 yarn install
 ```
 
-Since UI modules also have module descritors, we need to post the descriptors for the UI mods to Okapi. From the reshare-ui repo, run:
+Since UI modules also have module descriptors, we need to post the descriptors for the UI mods to Okapi. From the reshare-ui repo, run:
 ```
-yarn build-module-descritprs
+yarn build-module-descriptors
 ```
-This will build a module descriptor for each UI module in the ModuleDescriptors directory. Change into the ModuleDescritpors directory and post them to Okapi:
+This will build a module descriptor for each UI module in the ModuleDescriptors directory. Change into the ModuleDescriptors directory and post them to Okapi:
 ```
 for f in project*; do cat $f | http POST $okapi/_/proxy/modules "x-okapi-token:$token"; done
 ```
 
-### UI Nginx container
-Copy the manifests/reshare/nginx directory into the root of your flux control repository. This is a simple deployment and service for a stripes container. Note: you will need to create an ingress to reach this from outside your Kubernetes cluster. As an alternative, serve the webpack from your local machine:
+Finally, build the webpack. From the `repos/reshare-ui/platform-rs-dev` directory run:
 ```
-cd resources/3-reshare/output
-python3 -m http.server
+yarn build --okapi $okapi --tenant rs1
+```
+This should create an "output" directory with the freshly built webpack.
+
+### Enable software for the ReShare tenant
+Enable the remaining modules. They are listed in the "install.json" file in the platform-rs-dev directory. Begin by simulating an install to ensure the dependencies resolve for all modules:
+
+```
+cat install.json | http POST "$okapi/_/proxy/tenants/rs1/install?simulate=true" "x-okapi-token:$token"
 ```
 
+If the list of modules returned by the simulated install matches the list in install.json, proceed to enable modules:
+
+```
+cat install.json | http POST "$okapi/_/proxy/tenants/rs1/install?tenantParameters=loadReference%3Dtrue" "x-okapi-token:$token"
+```
+Note that the install call includes the [tenant parameter "loadReference"](https://github.com/folio-org/okapi/blob/master/doc/guide.md#tenant-parameters). 
+
+
 ### Create admin for ReShare Tenant
-Create an for the new tenant using the create-tenant-admin.py script:
+Create an admin for the new tenant using the create-tenant-admin.py script:
 ```
 python3 scripts/create-tenant-admin.py -o $okapi -u okapi_admin -a rs1admin -t rs1
 ```
 After the administrator has been configured, log in and make sure things look OK in your new tenant.
 
+### UI Nginx container
+The UI can be served in a number of ways. For this demo, we'll build an image with nginx and the output of the webpack. Begin by copying the output directory:
+```
+cp -a repos/reshare-ui/platform-rs-dev/output resources/3-reshare/output
+```
+
+Change into the resources directory and build a docker image:
+```
+cd resources/3-reshare
+docker build --platform linux/amd64 -f Stripes-Dockerfile -t stripes-minitex-training:latest .
+```
+From here, publish the image to a repository that your kubernetes cluster can pull from. This could be the public docker.io registry, AWS ECR, or something else.
+
+Copy the manifests/reshare/nginx directory into the root of your flux control repository. Edit the image line to point to the repository where you published your nginx image. This is a simple deployment and service for a stripes container. Note: you will need to create an ingress to reach this from outside your Kubernetes cluster. 
+
+As an alternative, serve the webpack from your local machine:
+```
+cd resources/3-reshare/output
+python3 -m http.server
+```
+
+At this point, you should be able to log in to the UI using the tenant administrator created in the previous step.
+
 ## Appendix
+
+### Yarn v1
+The ReShare and FOLIO projects use yarn version 1 as a javascript package manager. Install yarn version one using these instructions: https://classic.yarnpkg.com/en/docs/install
 
 ### Run a debug pod
 You can run a pod in your cluster to get a shell for debugging. For example:
