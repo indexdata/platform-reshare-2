@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: directory
+  namespace: reshare
+spec:
+  interval: 5m
+  releaseName: directory
+  chart:
+    spec:
+      chart: directory
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: idgithub
+        namespace: flux-system
+      version: ">0.1.0-0"
+  values:
+    service:
+      type: ClusterIP
+      httpPort: 8086
+    okapi-hooks:
+      tenants:
+      - rs1
+      enabled: true
+      moduleUrl: http://directory:8086
+    podAnnotations:
+      #bump this to force restart
+      checksum/config: "2"
+    imagePullSecrets:
+      - name: ghcr-secret
+    replicaCount: 1
+    env:
+      HOST: 0.0.0.0
+      SYMBOL_AUTHORITY: ISIL
+    envSecrets:
+      DATABASE_URL:
+        key: DATABASE_URL
+        name: reshare-db-connect

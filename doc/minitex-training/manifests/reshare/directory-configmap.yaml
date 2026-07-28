@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: directory
+  namespace: "reshare"
+data:
+  directory.json: |
+    [
+        {
+          "id": "d1016335-fe98-4ce7-a6a3-5f9b5273fcaa",
+          "name": "rs1",
+          "description": "rs1",
+          "organizationId": "001",
+          "type": "institution",
+          "email": "noreply-reshare@indexdata.com",
+          "fromEmail": "noreply-reshare@indexdata.com",
+          "hrid": "RS1",
+          "endpoints": [],
+          "symbols": [
+            {
+              "id": "8ebc46eb-f8e1-468e-809c-b442b4ff0f14",
+              "symbol": "US-RS1",
+              "authority": "ISIL"
+            }
+          ],
+          "vendor": "CrossLink",
+          "networks": [
+            {
+              "id": "078473d7-71e8-41c0-a8c8-2a9d29920cd4",
+              "name": "reshare2",
+              "consortium": "b915c0b7-d6e9-5058-8c9b-30e57059b449",
+              "priority": 1
+            }
+          ],
+          "tiers": [
+            {
+              "id": "ef400d60-d6a7-59a6-b85d-804b51ffd871",
+              "name": "Reciprocal Peer to Peer - Core Loan",
+              "consortium": "b915c0b7-d6e9-5058-8c9b-30e57059b449",
+              "type": "Loan",
+              "level": "Standard",
+              "cost": 0.0
+            },
+            {
+              "id": "419d4b63-ac25-50ef-a7fd-d16bb8521baf",
+              "name": "Reciprocal Peer to Peer - Core Copy",
+              "consortium": "b915c0b7-d6e9-5058-8c9b-30e57059b449",
+              "type": "Copy",
+              "level": "Standard",
+              "cost": 0.0
+            },
+            {
+              "consortium": "b915c0b7-d6e9-5058-8c9b-30e57059b449",
+              "cost": 0,
+              "id": "ef400d60-d6a7-59a6-b85d-804b51ffd871",
+              "level": "Express",
+              "name": "Reciprocal Peer to Peer - Express Loan",
+              "type": "Loan"
+            },
+            {
+              "consortium": "b915c0b7-d6e9-5058-8c9b-30e57059b449",
+              "cost": 0,
+              "id": "419d4b63-ac25-50ef-a7fd-d16bb8521baf",
+              "level": "Express",
+              "name": "Reciprocal Peer to Peer - Express Copy",
+              "type": "Copy"
+            }
+          ],
+          "addresses": [
+            {
+              "id": "6394536b-9d63-4e7b-949e-b91c57e12b82",
+              "entry": "d1016335-fe98-4ce7-a6a3-5f9b5273fcaa",
+              "type": "Shipping",
+              "addressComponents": [
+                {
+                  "id": "ed7b716e-96b0-46d9-8201-c5e6e520314e",
+                  "address": "6394536b-9d63-4e7b-949e-b91c57e12b82",
+                  "type": "Thoroughfare",
+                  "value": "100 Library Way"
+                },
+                {
+                  "id": "e74cd0f8-ea7f-4105-ab99-08eb836c1d50",
+                  "address": "6394536b-9d63-4e7b-949e-b91c57e12b82",
+                  "type": "Locality",
+                  "value": "Ann Arbor"
+                },
+                {
+                  "id": "858f528d-5bc8-43a5-bdfd-0571192459df",
+                  "address": "6394536b-9d63-4e7b-949e-b91c57e12b82",
+                  "type": "AdministrativeArea",
+                  "value": "MI"
+                },
+                {
+                  "id": "057e7178-8728-4ce2-acd2-43e1a753daee",
+                  "address": "6394536b-9d63-4e7b-949e-b91c57e12b82",
+                  "type": "PostalCode",
+                  "value": "48104"
+                },
+                {
+                  "id": "b18cd6d1-8863-4d83-9568-aa29a4aafb61",
+                  "address": "6394536b-9d63-4e7b-949e-b91c57e12b82",
+                  "type": "CountryCode",
+                  "value": "USA"
+                }
+              ]
+            }
+          ],
+          "closures": [],
+          "timeZone": "America/New_York",
+          "lmsConfig": {
+            "address": "",
+            "fromAgency": "ReShare",
+            "fromAgencyAuthentication": "changeme",
+            "toAgency": "rs1",
+            "lookupUserEnabled": true,
+            "acceptItemEnabled": true,
+            "checkInItemEnabled": true,
+            "checkOutItemEnabled": true,
+            "itemLocation": "KU/CC/DI/M",
+            "requestItemRequestType": "Page",
+            "requestItemRequestScopeType": "Item",
+            "requestItemBibIdCode": "SYSNUMBER",
+            "requestItemPickupLocationEnabled": true,
+            "requesterPickupLocation": "cd1",
+            "supplierPickupLocation": "cd1",
+            "requesterPatronPattern": "INST-{requesterSymbol}"
+          }
+        }
+      ]

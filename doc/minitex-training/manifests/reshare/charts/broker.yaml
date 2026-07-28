@@ -1,0 +1,57 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: broker
+  namespace: reshare
+spec:
+  interval: 5m
+  releaseName: crosslink-broker
+  chart:
+    spec:
+      chart: crosslink-broker
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: idgithub-public
+        namespace: flux-system
+      version: ">0.1.0-0"
+  values:
+    replicaCount: 1
+    okapi-hooks:
+      tenants:
+      - rs1
+    podAnnotations:
+      checksum/config: "3"
+    env:
+      DB_PROVISION: "true"
+      BROKER_SYMBOL: ISIL:BROKER_DEV
+      BROKER_MODE: transparent
+      OFFERED_COSTS: "true"
+      HOLDINGS_ADAPTER: sru
+      SRU_URL: http://crosslink-illmock/sru
+      MOCK_CLIENT_URL: http://crosslink-illmock:80/iso18626
+      DIRECTORY_ADAPTER: api
+      DIRECTORY_API_URL: http://crosslink-illmock:80/directory/entries
+      TENANT_TO_SYMBOL: ISIL:US-{tenant}
+    #see https://github.com/indexdata/crosslink/tree/main/broker#configuration
+    envSecrets:
+      DB_TYPE:
+        key: DB_TYPE
+        name: reshare-db-connect
+      DB_USER:
+        key: DB_USER
+        name: reshare-db-connect
+      DB_PASSWORD:
+        key: DB_PASSWORD
+        name: reshare-db-connect
+      DB_HOST:
+        key: DB_HOST
+        name: reshare-db-connect
+      DB_DATABASE:
+        key: DB_DATABASE
+        name: reshare-db-connect
+      DB_PORT:
+        key: DB_PORT
+        name: reshare-db-connect
+    service:
+      type: ClusterIP
