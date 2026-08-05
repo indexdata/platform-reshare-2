@@ -23,7 +23,7 @@ spec:
     replicaCount: 3
     resources:
       requests:
-        memory: 4096Mi
+        memory: 256Mi
     secret: {"storage": "postgres","postgres_host": "resharedb-postgresql","postgres_port": "5432","postgres_username": "okapi","postgres_password": "okapi123","postgres_database": "okapi","okapiurl": "http://okapi:9130"}
     # this section creates an ingress, uncomment 
     #ingress:
