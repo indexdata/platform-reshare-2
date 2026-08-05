@@ -1,0 +1,45 @@
+# -*- mode: yaml; -*-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "mod-login-7-12-1"
+  labels:
+    app: "mod-login-7-12-1"
+    module: "mod-login"
+    folio_role: "backend-module"
+  namespace: "minitex-training"
+spec:
+  selector:
+    matchLabels:
+      app: "mod-login-7-12-1"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "mod-login-7-12-1"
+        module: "mod-login"
+        folio_role: "backend-module"
+    spec:
+      containers:
+        - name: "mod-login-7-12-1"
+          image: "folioorg/mod-login:7.12.1"
+          envFrom:
+            - secretRef:
+                name: "reshare-db-connect"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JAVA_OPTIONS
+              value: "-XX:MaxRAMPercentage=66.0 -Dlog4j2.formatMsgNoLookups=true"
+            - name: "LOGIN_COOKIE_SAMESITE"
+              value: "None"
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+          resources:
+            limits:
+              memory: 357913941
+      imagePullSecrets:
+        - name: "dockerhub-cred"

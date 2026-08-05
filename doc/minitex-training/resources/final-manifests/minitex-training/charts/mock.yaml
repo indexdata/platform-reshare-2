@@ -1,0 +1,43 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: mock
+  namespace: minitex-training
+spec:
+  interval: 5m
+  releaseName: crosslink-illmock
+  chart:
+    spec:
+      chart: crosslink-illmock
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: idgithub-public
+        namespace: flux-system
+      version: ">0.1.0-0"
+  values:
+    okapi-hooks:
+      tenants:
+      - rs1
+      - rs2
+      - rs3
+    podAnnotations:
+      #bump this after directory JSON changes to force restart
+      checksum/config: "0"
+    env:
+      PEER_URL: http://crosslink-broker:80/iso18626
+      CLEAN_TIMEOUT: "24h"
+      MOCK_DIRECTORY_ENTRIES_PATH: /directory.json #see below for the volumeMount
+    service:
+      type: ClusterIP
+    # mount directory.json
+    volumes:
+      - name: directory-volume
+        configMap:
+          name: directory
+          optional: false
+    volumeMounts:
+      - name: directory-volume
+        mountPath: "/directory.json"
+        subPath: directory.json
+        readOnly: true

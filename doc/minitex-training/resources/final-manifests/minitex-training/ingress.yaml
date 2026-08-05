@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/target: "k8s-kubesyst-foliodev-dc9b5cc5d0-1660806498.us-east-1.elb.amazonaws.com"
+    nginx.ingress.kubernetes.io/proxy-body-size: 10000m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+  creationTimestamp: null
+  name: minitex-ingress
+  namespace: minitex-training
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: rs1-minitex.reshare-dev.indexdata.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: rs2-minitex.reshare-dev.indexdata.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: rs3-minitex.reshare-dev.indexdata.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

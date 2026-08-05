@@ -1,0 +1,68 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: okapi
+  namespace: minitex-training
+spec:
+  releaseName: okapi
+  interval: 10m
+  chart:
+    spec:
+      chart: okapi
+      version: 0.1.17
+      sourceRef:
+        kind: HelmRepository
+        name: okapi
+        namespace: flux-system
+  values:
+    imageSecretName: dockerhub-cred
+    image:
+      tag: 6.2.8
+    clustered:
+      enabled: true
+    replicaCount: 3
+    resources:
+      requests:
+        memory: 4096Mi
+    secret: {"storage": "postgres","postgres_host": "resharedb-postgresql","postgres_port": "5432","postgres_username": "okapi","postgres_password": "okapi123","postgres_database": "okapi","okapiurl": "http://okapi:9130"}
+    ingress:
+      className: traefik
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "k8s-kubesyst-foliodev-dc9b5cc5d0-1660806498.us-east-1.elb.amazonaws.com"
+        nginx.ingress.kubernetes.io/proxy-body-size: "10000m"
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+      hosts:
+        - host: minitex-training-okapi.reshare-dev.indexdata.com
+          paths:
+            - path: /
+              pathType: Prefix
+        - host: rs1-minitex-okapi.reshare-dev.indexdata.com
+          paths:
+            - path: /
+              pathType: Prefix
+        - host: rs2-minitex-okapi.reshare-dev.indexdata.com
+          paths:
+            - path: /
+              pathType: Prefix
+        - host: rs3-minitex-okapi.reshare-dev.indexdata.com
+          paths:
+            - path: /
+              pathType: Prefix
+    probes:
+      liveness:
+        enabled: false
+        path: /_/proxy/health
+        initialDelaySeconds: 30
+        failureThreshold: 3
+        timeoutSeconds: 10
+        periodSeconds: 30
+
+# -- Specifies whether a readiness probe should be created
+      readiness:
+        enabled: false
+        path: /_/proxy/health
+        initialDelaySeconds: 30
+        failureThreshold: 3
+        timeoutSeconds: 10
+        periodSeconds: 30

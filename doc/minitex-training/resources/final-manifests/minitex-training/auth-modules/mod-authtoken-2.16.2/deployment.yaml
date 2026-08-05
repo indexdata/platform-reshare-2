@@ -1,0 +1,47 @@
+# -*- mode: yaml; -*-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "mod-authtoken-2-16-2"
+  labels:
+    app: "mod-authtoken-2-16-2"
+    module: "mod-authtoken"
+    folio_role: "backend-module"
+  namespace: "minitex-training"
+spec:
+  selector:
+    matchLabels:
+      app: "mod-authtoken-2-16-2"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "mod-authtoken-2-16-2"
+        module: "mod-authtoken"
+        folio_role: "backend-module"
+    spec:
+      containers:
+        - name: "mod-authtoken-2-16-2"
+          image: "folioorg/mod-authtoken:2.16.2"
+          envFrom:
+            - secretRef:
+                name: reshare-db-connect
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JAVA_OPTIONS
+              value: "-XX:MaxRAMPercentage=66.0 -Dcache.permissions=true -Djwt.signing.key=$(SIGNING_KEY) -Dlog4j2.formatMsgNoLookups=true"
+            - name: "TOKEN_EXPIRATION_SECONDS"
+              value: "accessToken:10800,refreshToken:604800"
+            - name: "LEGACY_TOKEN_TENANTS"
+              value: "*"
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+          resources:
+            limits:
+              memory: 357913941
+      imagePullSecrets:
+        - name: "dockerhub-cred"

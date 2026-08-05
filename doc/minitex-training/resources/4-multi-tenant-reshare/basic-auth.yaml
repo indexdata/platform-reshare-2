@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  auth: bWluaXRleDokYXByMSQ5ZHJGbWNpZSR0RTlCZXBWUWtOVWdaVjZwU0VnV0UvCg==
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: basic-auth
+  namespace: reshare

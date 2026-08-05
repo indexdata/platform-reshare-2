@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minitex-auth-ingress
+  namespace: minitex-training
+  annotations:
+    external-dns.alpha.kubernetes.io/target: "k8s-kubesyst-foliodev-dc9b5cc5d0-1660806498.us-east-1.elb.amazonaws.com"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10000m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    # basic auth
+    nginx.ingress.kubernetes.io/auth-realm: Authentication Required
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-type: basic
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: minitex-training-broker.reshare-dev.indexdata.com
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: crosslink-broker
+                port:
+                  number: 80
+    - host: minitex-training-mock.reshare-dev.indexdata.com
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: crosslink-illmock
+                port:
+                  number: 80
