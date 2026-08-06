@@ -331,7 +331,7 @@ Create two additional tenants:
 cat resources/4-multi-tenant-reshare/rs2.json | http POST $okapi/_/proxy/tenants "x-okapi-token:$token"
 cat resources/4-multi-tenant-reshare/rs3.json | http POST $okapi/_/proxy/tenants "x-okapi-token:$token"
 ```
-### Enable module for new tenants
+### Enable modules for new tenants
 Modify the broker and mock charts to add the new rs2 and rs2 tenants to the the `values.okapi-hooks.tenants` config:
 ```
   values:
