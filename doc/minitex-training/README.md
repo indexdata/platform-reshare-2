@@ -307,7 +307,194 @@ python3 -m http.server
 
 At this point, you should be able to log in to the UI using the tenant administrator created in the previous step.
 
+## Configure multiple tenants
+In order to test the ReShare system, multiple tenants are required. This section covers deploying and configuring multiple tenants. Some steps from the guide up to this point are modified and consolidated here.
+
+### Disable directory chart
+For this setup, we will use the crosslink-illmock application as the directory service, and to mock all integrations. Disable the directory application on the rs1 tenant if enabled. In the directory chart, change okapi-hooks.enabled to false:
+```
+    okapi-hooks:
+      tenants:
+      - rs1
+      enabled: false
+      moduleUrl: http://directory:8086
+```
+Commit the changes, and disable the directory module on the rs1 tenant:
+```
+echo '[{"id","directory","action":"disable}]' | http POST $okapi/_/proxy/tenants/rs1/install "x-okapi-token:$token"
+```
+
+### Create additional tenants
+
+Create two additional tenants:
+```
+cat resources/4-multi-tenant-reshare/rs2.json | http POST $okapi/_/proxy/tenants "x-okapi-token:$token"
+cat resources/4-multi-tenant-reshare/rs3.json | http POST $okapi/_/proxy/tenants "x-okapi-token:$token"
+```
+### Enable module for new tenants
+Modify the broker and mock charts to add the new rs2 and rs2 tenants to the the `values.okapi-hooks.tenants` config:
+```
+  values:
+    replicaCount: 1
+    okapi-hooks:
+      tenants:
+      - rs1
+      - rs2
+      - rs3
+```
+Commit the new configuration to the flux control repository to enable the broker and mock.
+
+Enable the remaining modules:
+```
+cat repose/reshare-ui/platform-rs-dev/install.json | http POST "$okapi/_/proxy/tenants/rs2/install?tenantParameters=loadReference%3Dtrue" "x-okapi-token:$token"
+cat repose/reshare-ui/platform-rs-dev/install.json | http POST "$okapi/_/proxy/tenants/rs3/install?tenantParameters=loadReference%3Dtrue" "x-okapi-token:$token"
+```
+
+#### optional alternative module enable trick
+You can also duplicate the set of enabled modules on rs1 on the other two tenants by asking Okpai what modules are enabled on rs1 and sending the list to rs2 and rs3. This is a one liner that gets the list of modules, formats it as an "install" command and posts to the new tenant.
+```
+http $okapi/_/proxy/tenants/rs1/modules "x-okapi-token:$token" | jq '[.[] + {"action":"enable"}]' | http POST "$okapi/_/proxy/tenants/rs2/install?tenantParameters=loadReference%3Dtrue" "x-okapi-token:$token"
+```
+### Create administrative users on new tenants
+Use the create-tenant-admin.py script to create new users:
+```
+python3 scripts/create-tenant-admin.py -o $okapi -u okapi_admin -a rs2_admin -t rs2
+python3 scripts/create-tenant-admin.py -o $okapi -u okapi_admin -a rs3_admin -t rs3
+
+```
+### Okapi Aliases
+When using multiple UIs pointing to the same Okapi, its useful to give Okapi an alias for each tenant. If multiple web packs are built with the same Okapi URL users may run into UI errors when switching between front ends if the browser caches and sends the x-okapi-token from a different UI. In the Okapi chart, specify multiple aliases for the same application in the ingress section. 
+```
+    ingress:
+      className: traefik
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "k8s-kubesyst-foliodev-111111111111-11111111111.us-east-1.elb.amazonaws.com"
+        nginx.ingress.kubernetes.io/proxy-body-size: "10000m"
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+      hosts:
+        - host: minitex-training-okapi.reshare-dev.indexdata.com
+          paths:
+            - path: /
+              pathType: Prefix
+        - host: rs1-minitex-okapi.reshare-dev.indexdata.com
+          paths:
+            - path: /
+              pathType: Prefix
+        - host: rs2-minitex-okapi.reshare-dev.indexdata.com
+          paths:
+            - path: /
+              pathType: Prefix
+        - host: rs3-minitex-okapi.reshare-dev.indexdata.com
+          paths:
+            - path: /
+              pathType: Prefix
+```
+Be sure to update the annotations and host names for ingress controllers and addresses specific to your cluster.
+
+### Build additional UI bundles
+Change into the `repos/reshare-ui/platform-rs-dev` directory and build three new webpacks. These should use the Okapi aliases created in the last step. For example:
+```
+yarn build --okapi https://rs1-minitex-okapi.reshare-dev.indexdata.com --tenant rs1 && mv output rs1
+yarn build --okapi https://rs2-minitex-okapi.reshare-dev.indexdata.com --tenant rs1 && mv output rs2
+yarn build --okapi https://rs3-minitex-okapi.reshare-dev.indexdata.com --tenant rs1 && mv output rs3
+```
+Copy the web packs into the `resources/4-multi-tenant-reshare` directory. A modified Dockerfile and nginx config are supplied to serve all three web packs. from the `resources/4-multi-tenant-reshare` directory build a new image:
+
+```
+docker build --platform linux/amd64 -f Stripes-Dockerfile -t stripes-minitex-training:latest .
+```
+and push it to your docker repository replacing the previous build. Restart the nginx container to pull in the latest image:
+```
+kubectl -n reshare rollout restart deployment nginx
+```
+Finally, update the ingress.yaml to direct traffic for all three UI webpacks to the nginx container:
+```
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: rs1-minitex.reshare-dev.indexdata.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: rs2-minitex.reshare-dev.indexdata.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: rs3-minitex.reshare-dev.indexdata.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+```
+### Checkpoint: visit new UIs and log in with admin accounts
+At this point, check your work by visiting the new UIs for the rs2 and rs3 tenants. Be sure you can log in with the newly created admin accounts. If you get a 403 error on the login endpoint in the console or the administrator account was not found, check that the new modules were built using the proper okapi alias for the tenant.
+
+### Add directory entries and configure settings
+Most per tenant configurations are handled in the directory entries. In this environment, we are using the crosslink-illmock to serve the directory as a flat file. Inspect the sample directory information at `resources/4-multi-tenant-reshare/sample-directory.json`. The lmsConfig section handles settings related to how requests interact with the ILS. For example `requestItemRequestType` is set to use "Page" as the default request type. The API for the directory is described here: https://github.com/indexdata/crosslink/blob/main/directory/api.yaml. We can put the sample directory into our directory-configmap.yaml manifest and restart the illmock deployment to configure settings for this environment.
+
+### Configure mock integrations
+For this environment, all integrations are handles by the mock. To set this up, the `lmsConfig.address` config in the directory will point to the crosslink-illmock's ncip service.
+```
+    "lmsConfig": {
+      "address": "http://crosslink-illmock:80/ncip",
+```
+
+The broker also needs to be configured to be configured to use the mock for the holdings adapter, ISO18626 client, and directory api. The following environment variables should be set on the broker:
+
+```
+# holdings adapter
+HOLDINGS_ADAPTER: sru
+SRU_URL: http://crosslink-illmock/sru
+# ISO18626 client
+MOCK_CLIENT_URL: http://crosslink-illmock:80/iso18626
+# Directory
+DIRECTORY_ADAPTER: api
+DIRECTORY_API_URL: http://crosslink-illmock:80/directory/entries
+```
+
+### Place requests in the ReShare UI
+At this point it should be possible to create and service requests in the UI. Log into one of the ReShare UI tenants and use the ILL Request > Create Patron Request form to create a new request. Fill in required fields with dummy values "test" is fine. for the System Identifier, we need to enter a special string that will be prompt the desired response. This is documented in the illmock here: https://github.com/indexdata/crosslink/blob/main/illmock/README.md#sru-service.
+
+Use a string with the pattern `return-$s::$l` as the ID. For example `return-ISIL:US-RS3::123` tells the mock to respond with a mocked holding belonging to the US-RS3 tenant with a local identifier of 123.
+
+### Add basic auth ingress to expose debugging services
+There are some useful debugging features on the mock and broker. You may chose to expose those beyond the cluster and protecting them with some kind of authentication system. In this example we'll use basic auth for both services. To do this we'll need to create another ingress and protect it with basic auth. Begin by creating an auth secret. Use this command to create a secret called "auth" for the user "minitex":
+```
+htpasswd -c auth minitex
+```
+Base 64 encode the result:
+```
+cat auth | base64
+```
+Copy the `resources/4-multi-tenant-reshare/basic-auth.yaml` and `resources/4-multi-tenant-reshare/auth-ingress.yaml` manifests into the reshare namespace in your flux control and edit them with values that correspond to your custer. replace the secret in basic-auth.yaml with the base64 encoded secret from your previous step.
+
+This will expose the broker transactions for easy inspection: https://minitex-training-broker.reshare-dev.indexdata.com/.
+
+It will also expose the mock. Some useful endpoints are to display the directory: https://minitex-training-mock.reshare-dev.indexdata.com/directory/entries. Or to use the form endpoint to craft an ISO18626 protocol message for testing: https://minitex-training-mock.reshare-dev.indexdata.com/form.
+
+
 ## Appendix
+
+### Final manifests
+A copy of all the final state of manifests used in this training is available for inspection at: resources/final-manifests/minitex-training. Note that the namespace used here is "minitex-training". Be sure to update the namespace and any cluster specific configuration (i.e. load balancer names) before using these in your own configuration.
 
 ### Yarn v1
 The ReShare and FOLIO projects use yarn version 1 as a javascript package manager. Install yarn version one using these instructions: https://classic.yarnpkg.com/en/docs/install
